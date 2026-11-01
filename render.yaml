@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: threatweaver-soc
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run.py --skip-pipeline
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PYTHONUTF8
+        value: "1"

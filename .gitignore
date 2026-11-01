@@ -28,3 +28,5 @@ upgrade_threatweaver.py
 *.parquet
 *.zip
 data/
+
+.env

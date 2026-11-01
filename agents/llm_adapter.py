@@ -47,15 +47,20 @@ class LLMAdapter:
         """Allows setting the API key dynamically from runtime or UI."""
         self.api_key = key.strip()
         self.is_enabled = bool(self.api_key and len(self.api_key) > 10)
+        try:
+            with open(".env", "w", encoding="utf-8") as f:
+                f.write(f"GEMINI_API_KEY={self.api_key}\nGOOGLE_API_KEY={self.api_key}\n")
+        except Exception:
+            pass
 
     def _call_gemini_api(self, prompt: str, system_instruction: str = "") -> Optional[str]:
-        """Calls Google Gemini API using standard library urllib with strict timeout."""
+        """Calls Google Gemini API with multi-model fallback and strict timeout."""
         self._refresh_key()
         if not self.is_enabled:
             return None
 
-        # Google Gemini 1.5 Flash endpoint (fast & cost-effective)
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.api_key}"
+        # Google Gemini models with priority fallback
+        models = ["gemini-flash-lite-latest", "gemini-flash-latest", "gemini-1.5-flash"]
         
         payload = {
             "contents": [{
@@ -73,26 +78,33 @@ class LLMAdapter:
             }
 
         data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(
-            url,
-            data=data,
-            headers={"Content-Type": "application/json"}
-        )
 
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout_seconds) as response:
-                if response.status == 200:
-                    result = json.loads(response.read().decode("utf-8"))
-                    candidates = result.get("candidates", [])
-                    if candidates:
-                        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-                        return text.strip()
-        except urllib.error.HTTPError as e:
-            # e.g. 400 invalid key, 429 quota -> graceful fallback
-            return None
-        except Exception:
-            # Network timeout or offline -> graceful fallback
-            return None
+        for model in models:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.api_key}"
+            req = urllib.request.Request(
+                url,
+                data=data,
+                headers={"Content-Type": "application/json"}
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=self.timeout_seconds) as response:
+                    if response.status == 200:
+                        result = json.loads(response.read().decode("utf-8"))
+                        candidates = result.get("candidates", [])
+                        if candidates:
+                            text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                            if text:
+                                return text.strip()
+            except urllib.error.HTTPError as e:
+                # If 404 (model moved) or 503 (busy), try next model
+                if e.code in (404, 503):
+                    continue
+                return None
+            except Exception:
+                # Network timeout or offline -> try next model or graceful fallback
+                continue
+                
+        return None
             
         return None
 

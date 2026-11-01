@@ -2222,7 +2222,11 @@ New-NetFirewallRule -DisplayName "ThreatWeaver-Isolate-${inc.id}" \\
 
     // Auto-check on initialization
     window.addEventListener('DOMContentLoaded', () => {
-      const localKey = localStorage.getItem('TW_GEMINI_KEY');
+      let localKey = localStorage.getItem('TW_GEMINI_KEY');
+      if (!localKey) {
+        localKey = '';
+        localStorage.setItem('TW_GEMINI_KEY', localKey);
+      }
       if (localKey) {
         updateApiKeyUI(true);
         fetch('/api/agents/config-llm', {
