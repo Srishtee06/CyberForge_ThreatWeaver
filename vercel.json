@@ -2,6 +2,18 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://threatweaver-soc.onrender.com/api/$1"
+    },
+    {
+      "source": "/download-readme",
+      "destination": "https://threatweaver-soc.onrender.com/download-readme"
+    },
+    {
+      "source": "/download-package",
+      "destination": "https://threatweaver-soc.onrender.com/download-package"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
