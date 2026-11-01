@@ -206,8 +206,12 @@
             <span class="text-xs font-semibold tracking-wide uppercase text-indigo-300">Ask ThreatWeaver Agent</span>
             <span class="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/50 text-emerald-400 text-[10px] mono font-medium">&lt;50ms Deterministic Offline</span>
           </div>
-          <div class="text-[11px] text-zinc-400 flex items-center gap-2">
-            <span>Live Graph-State Bound</span>
+          <div class="text-[11px] text-zinc-400 flex items-center gap-2.5">
+            <button type="button" onclick="promptApiKey()" id="apiKeyBtn" class="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 text-[10px] mono flex items-center gap-1 cursor-pointer transition shadow-xs">
+              <span>🔑</span>
+              <span id="apiKeyStatusLabel">Set Gemini API Key</span>
+            </button>
+            <span class="hidden sm:inline">Graph-State Bound</span>
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           </div>
         </div>
@@ -2177,6 +2181,62 @@ New-NetFirewallRule -DisplayName "ThreatWeaver-Isolate-${inc.id}" \\
     // =========================================================================
     // 4-AGENT LANGGRAPH RE-ACT ORCHESTRATION & COMMAND BAR FUNCTIONS
     // =========================================================================
+
+    
+    function promptApiKey() {
+      const currentKey = localStorage.getItem('TW_GEMINI_KEY') || '';
+      const key = prompt("Enter your Google Gemini API Key (starts with AIzaSy...):\n\nNote: ThreatWeaver works 100% offline without any key. Adding your key enables Google Gemini 1.5 Flash natural language enrichment.", currentKey);
+      if (key !== null) {
+        const cleanKey = key.trim();
+        if (cleanKey) {
+          localStorage.setItem('TW_GEMINI_KEY', cleanKey);
+          fetch('/api/agents/config-llm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ api_key: cleanKey })
+          }).then(r => r.json()).then(data => {
+            updateApiKeyUI(true);
+            showToast("Google Gemini API Key activated! Enhanced narrative synthesis online.");
+          }).catch(() => {
+            updateApiKeyUI(true);
+            showToast("Gemini Key saved locally in browser.");
+          });
+        } else {
+          localStorage.removeItem('TW_GEMINI_KEY');
+          updateApiKeyUI(false);
+          showToast("Reverted to 100% Deterministic Offline Engine.");
+        }
+      }
+    }
+
+    function updateApiKeyUI(active) {
+      const label = document.getElementById('apiKeyStatusLabel');
+      if (label) {
+        if (active) {
+          label.innerHTML = '<span class="text-emerald-400 font-bold">● Gemini 1.5 Flash: Active</span>';
+        } else {
+          label.textContent = "Set Gemini API Key";
+        }
+      }
+    }
+
+    // Auto-check on initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      const localKey = localStorage.getItem('TW_GEMINI_KEY');
+      if (localKey) {
+        updateApiKeyUI(true);
+        fetch('/api/agents/config-llm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ api_key: localKey })
+        }).catch(() => {});
+      } else {
+        fetch('/api/agents/config-llm')
+          .then(r => r.json())
+          .then(d => { if (d && d.is_enabled) updateApiKeyUI(true); })
+          .catch(() => {});
+      }
+    });
 
     function executeAgentCommandPreset(presetKey) {
       const input = document.getElementById('agentCommandInput');

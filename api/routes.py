@@ -395,6 +395,10 @@ def get_system_metrics():
 # ==============================================================================
 
 
+
+class LLMConfigRequest(BaseModel):
+    api_key: str
+
 class AgentCommandRequest(BaseModel):
     incident_id: str = "INC-12"
     query: str
@@ -463,8 +467,8 @@ def execute_agent_command(req: AgentCommandRequest):
         ans = res_exp.get("answer") or res_exp.get("explanation")
         result = {"preset": "custom", "details": res_exp}
 
-    if req.llm_enabled:
-        from agents.llm_adapter import _default_adapter
+    from agents.llm_adapter import _default_adapter
+    if req.llm_enabled or _default_adapter.is_enabled:
         from agents.tools import get_incident_data
         ans = _default_adapter.explain_command(req.query, get_incident_data(inc_id), ans)
         
@@ -475,6 +479,34 @@ def execute_agent_command(req: AgentCommandRequest):
         "response": ans,
         "latency_ms": latency,
         "result_data": result
+    }
+
+
+@router.post("/agents/config-llm", summary="Configure Google Gemini API Key dynamically")
+def configure_llm_key(req: LLMConfigRequest):
+    """Saves Google Gemini API key into runtime adapter and persistent .env file."""
+    from agents.llm_adapter import _default_adapter
+    _default_adapter.set_api_key(req.api_key)
+    try:
+        with open(".env", "w", encoding="utf-8") as f:
+            f.write(f"GEMINI_API_KEY={req.api_key}\n")
+    except Exception:
+        pass
+    return {
+        "status": "SUCCESS",
+        "is_enabled": _default_adapter.is_enabled,
+        "model": "gemini-1.5-flash",
+        "message": "Google Gemini API successfully configured! Enhanced narrative reasoning active."
+    }
+
+@router.get("/agents/config-llm", summary="Get Google Gemini API Status")
+def get_llm_status():
+    from agents.llm_adapter import _default_adapter
+    _default_adapter._refresh_key()
+    return {
+        "is_enabled": _default_adapter.is_enabled,
+        "model": "gemini-1.5-flash",
+        "has_key": bool(_default_adapter.api_key)
     }
 
 @router.post("/agents/generate-sigma/{incident_id}", summary="Generate Sigma Rule from Incident")
