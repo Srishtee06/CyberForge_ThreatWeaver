@@ -1,0 +1,8 @@
+description: Detects persistent Command-and-Control telemetry beaconing over HTTP/HTTPS/DNS.
+id: R-05
+mitre_id: T1071.001
+name: C2 Beaconing & Web Protocol Tunnels
+pattern: Cobalt.Strike|beacon|Mirai|catdesc="Botnet"|Sliver|Metasploit
+severity: CRITICAL
+stage: Command and Control
+technique: 'Web Protocols: Cobalt Strike / C2 Beaconing'

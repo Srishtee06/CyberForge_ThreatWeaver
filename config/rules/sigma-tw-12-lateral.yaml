@@ -1,0 +1,23 @@
+title: "ThreatWeaver Detected Lateral Movement (Operation ShadowPivot: HR-07 Brute Force to D)"
+id: sigma-tw-12-lateral
+status: experimental
+description: "Auto-generated detection rule from ThreatWeaver incident INC-12 tracking lateral SMB/Admin share pivots."
+references:
+    - https://attack.mitre.org/techniques/T1048/
+author: "ThreatWeaver Adaptive Rule Agent"
+date: "2026-11-01"
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        EventID: "4720"
+        ShareName: ["\\\\*\\ADMIN$", "\\\\*\\C$"]
+    condition: selection
+falsepositives:
+    - Authorized administrative maintenance
+    - Scheduled vulnerability scanning
+level: high
+tags:
+    - attack.lateral_movement
+    - attack.t1048

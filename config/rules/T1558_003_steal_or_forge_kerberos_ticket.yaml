@@ -1,0 +1,9 @@
+description: Identifies Active Directory Kerberos TGS requests for service accounts
+  utilizing weak RC4 encryption.
+id: R-08
+mitre_id: T1558.003
+name: Kerberoasting Service Ticket Extraction
+pattern: EventID=4769|Ticket_Options=0x40810000|Ticket_Encryption_Type=0x17|kerberoast
+severity: HIGH
+stage: Credential Access
+technique: 'Steal or Forge Kerberos Tickets: Kerberoasting'

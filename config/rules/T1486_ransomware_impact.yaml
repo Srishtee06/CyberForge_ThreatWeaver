@@ -1,0 +1,31 @@
+title: "Ransomware and Malicious Payload Delivery"
+id: "rule-t1486-001"
+status: "production"
+description: "Detects malware and ransomware payloads or access to known malicious domains"
+references:
+  - "https://attack.mitre.org/techniques/T1486/"
+author: "CyberForge Detection Engineering"
+date: "2026-10-31"
+
+mitre:
+  technique_id: "T1486"
+  technique_name: "Data Encrypted for Impact (Ransomware)"
+  tactic: "Impact"
+  kill_chain_stage: "Action on Objectives"
+  severity: "CRITICAL"
+
+detection:
+  condition: "ransomware_or_malware_event"
+  rules:
+    - name: "ransomware_webfilter_and_virus"
+      sql: "(catdesc LIKE '%Ransomware%' OR catdesc LIKE '%Malware%' OR virus IS NOT NULL)"
+      aggregation:
+        by: ["srcip", "dstip"]
+        window_seconds: 60
+        threshold: 1
+
+remediation:
+  action: "EMERGENCY_CONTAINMENT"
+  target: "srcip"
+  quarantine_endpoints: true
+

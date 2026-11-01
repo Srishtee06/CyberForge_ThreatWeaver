@@ -1,0 +1,9 @@
+description: Flags massive outbound data transfers (>50MB) directed to unauthorized
+  external IP addresses.
+id: R-06
+mitre_id: T1048
+name: Outbound Exfiltration Over Alternative Protocol
+pattern: outbound_upload|exfil|bytes_out=[5-9][0-9]{7}|sentbyte=[5-9][0-9]{7}
+severity: CRITICAL
+stage: Exfiltration
+technique: Exfiltration Over Alternative Protocol

@@ -1,0 +1,9 @@
+description: Identifies unauthorized creation of local administrator or domain admin
+  accounts.
+id: R-03
+mitre_id: T1136.001
+name: Suspicious Privileged Account Creation
+pattern: new_admin|4720|useradd|net user.*/add|dsadd user
+severity: HIGH
+stage: Persistence
+technique: 'Create Account: Local/Domain Account'

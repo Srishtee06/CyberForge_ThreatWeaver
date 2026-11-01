@@ -1,0 +1,9 @@
+description: Detects network logons authenticating via stolen NTLM hashes without
+  plaintext password verification.
+id: R-12
+mitre_id: T1550.002
+name: Pass-the-Hash / NTLM Relay Lateral Movement
+pattern: EventID=4624.*LogonType=3.*AuthenticationPackageName=NTLM.*KeyLength=0|mimikatz.*pth
+severity: HIGH
+stage: Lateral Movement
+technique: 'Use Alternate Authentication Material: Pass the Hash'

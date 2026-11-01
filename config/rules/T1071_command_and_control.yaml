@@ -1,0 +1,31 @@
+title: "Adversary Command and Control Beaconing"
+id: "rule-t1071-001"
+status: "production"
+description: "Detects Cobalt Strike beacons, Mirai botnet communication, or external C2 callback activity"
+references:
+  - "https://attack.mitre.org/techniques/T1071/001/"
+author: "CyberForge Detection Engineering"
+date: "2026-10-31"
+
+mitre:
+  technique_id: "T1071.001"
+  technique_name: "Web Protocols (Cobalt Strike / C2 Beaconing)"
+  tactic: "Command and Control"
+  kill_chain_stage: "Command & Control"
+  severity: "CRITICAL"
+
+detection:
+  condition: "c2_signature_or_beacon"
+  rules:
+    - name: "known_c2_traffic"
+      sql: "(attack LIKE '%Cobalt.Strike%' OR attack LIKE '%Mirai%' OR catdesc = 'Botnet' OR catdesc = 'Spyware')"
+      aggregation:
+        by: ["srcip", "dstip"]
+        window_seconds: 60
+        threshold: 1
+
+remediation:
+  action: "SINKHOLE_DESTINATION_IP"
+  target: "dstip"
+  isolate_source: true
+

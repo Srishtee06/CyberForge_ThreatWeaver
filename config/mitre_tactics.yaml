@@ -1,0 +1,89 @@
+# MITRE ATT&CK & Cyber Kill Chain Mapping Matrix
+tactics:
+  Reconnaissance:
+    id: "TA0043"
+    kill_chain_stage: "Reconnaissance"
+    description: "Attacker gathers information to plan future adversary operations."
+  Initial Access:
+    id: "TA0001"
+    kill_chain_stage: "Weaponization & Delivery"
+    description: "Techniques that use various entry vectors to gain an initial foothold."
+  Execution:
+    id: "TA0002"
+    kill_chain_stage: "Exploitation"
+    description: "Techniques that result in adversary-controlled code running on a local or remote system."
+  Persistence:
+    id: "TA0003"
+    kill_chain_stage: "Installation"
+    description: "Techniques used to keep access to systems across restarts or changed credentials."
+  Privilege Escalation:
+    id: "TA0004"
+    kill_chain_stage: "Exploitation"
+    description: "Techniques used to gain higher-level permissions on a system or network."
+  Defense Evasion:
+    id: "TA0005"
+    kill_chain_stage: "Installation"
+    description: "Techniques used to avoid detection throughout their compromise."
+  Credential Access:
+    id: "TA0006"
+    kill_chain_stage: "Installation"
+    description: "Techniques for stealing credentials like account names and passwords."
+  Discovery:
+    id: "TA0007"
+    kill_chain_stage: "Reconnaissance"
+    description: "Techniques used to gain knowledge about the internal system and network."
+  Lateral Movement:
+    id: "TA0008"
+    kill_chain_stage: "Lateral Movement"
+    description: "Techniques used to enter and control remote systems on a network."
+  Collection:
+    id: "TA0009"
+    kill_chain_stage: "Action on Objectives"
+    description: "Techniques used to gather data of interest prior to exfiltration."
+  Command and Control:
+    id: "TA0011"
+    kill_chain_stage: "Command & Control"
+    description: "Techniques used to communicate with systems under adversary control."
+  Exfiltration:
+    id: "TA0010"
+    kill_chain_stage: "Action on Objectives"
+    description: "Techniques used to steal data from your network."
+  Impact:
+    id: "TA0040"
+    kill_chain_stage: "Action on Objectives"
+    description: "Techniques used to disrupt availability or compromise integrity by destroying systems and data."
+
+techniques:
+  T1110:
+    name: "Brute Force"
+    tactic: "Credential Access"
+    kill_chain_stage: "Installation"
+  T1190:
+    name: "Exploit Public-Facing Application"
+    tactic: "Initial Access"
+    kill_chain_stage: "Weaponization & Delivery"
+  T1068:
+    name: "Exploitation for Privilege Escalation"
+    tactic: "Privilege Escalation"
+    kill_chain_stage: "Exploitation"
+  T1021.002:
+    name: "SMB/Windows Admin Shares"
+    tactic: "Lateral Movement"
+    kill_chain_stage: "Lateral Movement"
+  T1071.001:
+    name: "Web Protocols (Cobalt Strike / C2 Beaconing)"
+    tactic: "Command and Control"
+    kill_chain_stage: "Command & Control"
+  T1048:
+    name: "Exfiltration Over Alternative Protocol"
+    tactic: "Exfiltration"
+    kill_chain_stage: "Action on Objectives"
+  T1486:
+    name: "Data Encrypted for Impact (Ransomware)"
+    tactic: "Impact"
+    kill_chain_stage: "Action on Objectives"
+  T1566:
+    name: "Phishing"
+    tactic: "Initial Access"
+    kill_chain_stage: "Weaponization & Delivery"
+

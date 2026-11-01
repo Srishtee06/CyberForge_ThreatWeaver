@@ -1,0 +1,136 @@
+detection_rules:
+- description: Detects remote code execution exploits targeting internet-facing enterprise
+    infrastructure.
+  id: R-01
+  mitre_id: T1190
+  name: Exploit Public-Facing Application (Log4j / vCenter)
+  pattern: Log4j|vCenter|Citrix|WebLogic|Buffer.Overflow|OGNL
+  severity: CRITICAL
+  stage: Initial Access
+  technique: Exploit Public-Facing Application
+- description: Detects high-frequency authentication failures indicative of dictionary
+    attacks or password spraying.
+  id: R-02
+  mitre_id: T1110
+  name: Authentication Burst & Credential Brute Force
+  pattern: failed_login|4625|brute|Password.Spray|Bad.Password
+  severity: HIGH
+  stage: Credential Access
+  technique: Brute Force
+- description: Identifies unauthorized creation of local administrator or domain admin
+    accounts.
+  id: R-03
+  mitre_id: T1136.001
+  name: Suspicious Privileged Account Creation
+  pattern: new_admin|4720|useradd|net user.*/add|dsadd user
+  severity: HIGH
+  stage: Persistence
+  technique: 'Create Account: Local/Domain Account'
+- description: Detects lateral movement across internal subnets utilizing hidden administrative
+    shares.
+  id: R-04
+  mitre_id: T1021.002
+  name: SMB / Windows Admin Share Lateral Pivot
+  pattern: smb_lateral|admin\$|c\$|ipc\$|psexec|5140|5145
+  severity: HIGH
+  stage: Lateral Movement
+  technique: 'Remote Services: SMB/Windows Admin Shares'
+- description: Detects persistent Command-and-Control telemetry beaconing over HTTP/HTTPS/DNS.
+  id: R-05
+  mitre_id: T1071.001
+  name: C2 Beaconing & Web Protocol Tunnels
+  pattern: Cobalt.Strike|beacon|Mirai|catdesc="Botnet"|Sliver|Metasploit
+  severity: CRITICAL
+  stage: Command and Control
+  technique: 'Web Protocols: Cobalt Strike / C2 Beaconing'
+- description: Flags massive outbound data transfers (>50MB) directed to unauthorized
+    external IP addresses.
+  id: R-06
+  mitre_id: T1048
+  name: Outbound Exfiltration Over Alternative Protocol
+  pattern: outbound_upload|exfil|bytes_out=[5-9][0-9]{7}|sentbyte=[5-9][0-9]{7}
+  severity: CRITICAL
+  stage: Exfiltration
+  technique: Exfiltration Over Alternative Protocol
+- description: Detects active ransomware encryption activity, shadow copy deletion,
+    or backup catalog purging.
+  id: R-07
+  mitre_id: T1486
+  name: Ransomware Encryption & Data Destruction
+  pattern: Ransomware|encrypt|vssadmin delete shadows|wbadmin delete catalog|virus=
+  severity: CRITICAL
+  stage: Impact
+  technique: Data Encrypted for Impact
+- description: Identifies Active Directory Kerberos TGS requests for service accounts
+    utilizing weak RC4 encryption.
+  id: R-08
+  mitre_id: T1558.003
+  name: Kerberoasting Service Ticket Extraction
+  pattern: EventID=4769|Ticket_Options=0x40810000|Ticket_Encryption_Type=0x17|kerberoast
+  severity: HIGH
+  stage: Credential Access
+  technique: 'Steal or Forge Kerberos Tickets: Kerberoasting'
+- description: Detects unauthorized access or process memory dumping of the Local
+    Security Authority Subsystem Service.
+  id: R-09
+  mitre_id: T1003.001
+  name: LSASS Memory Credential Dumping (Mimikatz)
+  pattern: mimikatz|sekurlsa|lsass.exe.*dump|procdump.*lsass|MiniDumpWriteDump
+  severity: CRITICAL
+  stage: Credential Access
+  technique: 'OS Credential Dumping: LSASS Memory'
+- description: Detects weaponized Microsoft Office macros or child processes executing
+    scripting interpreters.
+  id: R-10
+  mitre_id: T1566.001
+  name: Spearphishing Attachment Execution
+  pattern: WINWORD.EXE.*powershell|EXCEL.EXE.*cmd|invoice\.vbs|macro_exec|outlook.*attachment
+  severity: HIGH
+  stage: Initial Access
+  technique: 'Phishing: Spearphishing Attachment'
+- description: Detects Base64-encoded or obfuscated PowerShell commands executing
+    hidden in-memory payloads.
+  id: R-11
+  mitre_id: T1059.001
+  name: Obfuscated / Encoded PowerShell Execution
+  pattern: powershell.*-e(nc)?\s+[A-Za-z0-9+/=]{20,}|powershell.*-nop.*-w hidden|downloadstring|iex\s*\(
+  severity: HIGH
+  stage: Execution
+  technique: 'Command and Scripting Interpreter: PowerShell'
+- description: Detects network logons authenticating via stolen NTLM hashes without
+    plaintext password verification.
+  id: R-12
+  mitre_id: T1550.002
+  name: Pass-the-Hash / NTLM Relay Lateral Movement
+  pattern: EventID=4624.*LogonType=3.*AuthenticationPackageName=NTLM.*KeyLength=0|mimikatz.*pth
+  severity: HIGH
+  stage: Lateral Movement
+  technique: 'Use Alternate Authentication Material: Pass the Hash'
+- description: Detects persistence achieved by injecting SSH public keys into user
+    profiles or modifying AD AdminSDHolder.
+  id: R-13
+  mitre_id: T1098
+  name: Account Manipulation & SSH Authorized Keys Backdoor
+  pattern: authorized_keys.*echo|EventID=4738|adminCount=1.*modified|shadow_credentials
+  severity: HIGH
+  stage: Persistence
+  technique: 'Account Manipulation: SSH Authorized Keys'
+- description: Flags attempts by adversaries to clear the Windows Security log or
+    delete Linux audit logs.
+  id: R-14
+  mitre_id: T1070.001
+  name: Security Audit Log Tampering (EventID 1102 / Log Cleared)
+  pattern: EventID=1102|EventID=104|wevtutil.*cl.*Security|rm -rf /var/log
+  severity: HIGH
+  stage: Defense Evasion
+  technique: 'Indicator Removal: Clear Windows Event Logs'
+- description: Detects command-line synchronization tools staging and exfiltrating
+    corporate data to personal cloud storage.
+  id: R-15
+  mitre_id: T1567.002
+  name: Cloud Storage Exfiltration via Rclone / Mega / AWS S3
+  pattern: rclone.*copy|mega-cmd|aws s3 sync|curl -F.*file=@.*transfer.sh|dropbox_upload
+  severity: CRITICAL
+  stage: Exfiltration
+  technique: 'Exfiltration Over Web Service: Exfiltration to Cloud Storage'
+total_rules: 15

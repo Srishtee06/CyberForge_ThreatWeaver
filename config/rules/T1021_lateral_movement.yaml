@@ -1,0 +1,31 @@
+title: "Lateral Movement via SMB and Administrative Shares"
+id: "rule-t1021-001"
+status: "production"
+description: "Detects unauthorized internal lateral movement across segments via SMB or RDP"
+references:
+  - "https://attack.mitre.org/techniques/T1021/002/"
+author: "CyberForge Detection Engineering"
+date: "2026-10-31"
+
+mitre:
+  technique_id: "T1021.002"
+  technique_name: "SMB/Windows Admin Shares"
+  tactic: "Lateral Movement"
+  kill_chain_stage: "Lateral Movement"
+  severity: "HIGH"
+
+detection:
+  condition: "internal_lateral_signature"
+  rules:
+    - name: "smb_peeking_and_trans"
+      sql: "(attack LIKE '%SMB.Server.Trans.Peeking%' OR (service = 'SMB' AND srcintf LIKE 'internal%' AND dstintf IN ('internal2', 'mgmt')))"
+      aggregation:
+        by: ["srcip", "dstip"]
+        window_seconds: 120
+        threshold: 1
+
+remediation:
+  action: "TERMINATE_SESSION_AND_ISOLATE"
+  target: "srcip"
+  block_port: 445
+

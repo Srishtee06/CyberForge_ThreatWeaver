@@ -1,0 +1,30 @@
+# Raw multi-gigabyte logs
+*.log
+firex-10G.log
+
+# Temporary caches & spill directories
+__pycache__/
+*.pyc
+.pytest_cache/
+data/duckdb_temp/
+
+# Temporary unpacked archives & third-party clones
+extracted_user_zip/
+nidra_repo/
+CyberForge Hackathon.pdf
+
+# Scratch migration scripts
+apply_clean_html_fix.py
+apply_full_upgrades.py
+build_full_threatweaver.py
+fix_script_placement.py
+inspect_dropdown.py
+make_package.py
+read_head.py
+update_readme_full.py
+upgrade_threatweaver.py
+
+# Parquet tables and zip archives
+*.parquet
+*.zip
+data/

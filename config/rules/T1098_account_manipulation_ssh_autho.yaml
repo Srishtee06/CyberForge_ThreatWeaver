@@ -1,0 +1,9 @@
+description: Detects persistence achieved by injecting SSH public keys into user profiles
+  or modifying AD AdminSDHolder.
+id: R-13
+mitre_id: T1098
+name: Account Manipulation & SSH Authorized Keys Backdoor
+pattern: authorized_keys.*echo|EventID=4738|adminCount=1.*modified|shadow_credentials
+severity: HIGH
+stage: Persistence
+technique: 'Account Manipulation: SSH Authorized Keys'

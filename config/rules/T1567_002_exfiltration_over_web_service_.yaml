@@ -1,0 +1,9 @@
+description: Detects command-line synchronization tools staging and exfiltrating corporate
+  data to personal cloud storage.
+id: R-15
+mitre_id: T1567.002
+name: Cloud Storage Exfiltration via Rclone / Mega / AWS S3
+pattern: rclone.*copy|mega-cmd|aws s3 sync|curl -F.*file=@.*transfer.sh|dropbox_upload
+severity: CRITICAL
+stage: Exfiltration
+technique: 'Exfiltration Over Web Service: Exfiltration to Cloud Storage'

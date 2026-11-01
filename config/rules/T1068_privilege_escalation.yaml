@@ -1,0 +1,31 @@
+title: "Privilege Escalation Exploitation"
+id: "rule-t1068-001"
+status: "production"
+description: "Detects exploitation targeting domain controllers or kernel components such as ZeroLogon and HTTP.sys"
+references:
+  - "https://attack.mitre.org/techniques/T1068/"
+author: "CyberForge Detection Engineering"
+date: "2026-10-31"
+
+mitre:
+  technique_id: "T1068"
+  technique_name: "Exploitation for Privilege Escalation"
+  tactic: "Privilege Escalation"
+  kill_chain_stage: "Exploitation"
+  severity: "CRITICAL"
+
+detection:
+  condition: "priv_esc_signature"
+  rules:
+    - name: "zerologon_and_elevation"
+      sql: "(attack LIKE '%ZeroLogon%' OR attack LIKE '%Privilege.Escalation%' OR attack LIKE '%HTTP.sys%')"
+      aggregation:
+        by: ["srcip", "dstip"]
+        window_seconds: 60
+        threshold: 1
+
+remediation:
+  action: "ISOLATE_HOST"
+  target: "dstip"
+  rotate_credentials: true
+

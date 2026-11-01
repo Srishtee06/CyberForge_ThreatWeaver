@@ -1,0 +1,9 @@
+description: Flags attempts by adversaries to clear the Windows Security log or delete
+  Linux audit logs.
+id: R-14
+mitre_id: T1070.001
+name: Security Audit Log Tampering (EventID 1102 / Log Cleared)
+pattern: EventID=1102|EventID=104|wevtutil.*cl.*Security|rm -rf /var/log
+severity: HIGH
+stage: Defense Evasion
+technique: 'Indicator Removal: Clear Windows Event Logs'

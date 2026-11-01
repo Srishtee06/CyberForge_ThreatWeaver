@@ -1,0 +1,9 @@
+description: Detects weaponized Microsoft Office macros or child processes executing
+  scripting interpreters.
+id: R-10
+mitre_id: T1566.001
+name: Spearphishing Attachment Execution
+pattern: WINWORD.EXE.*powershell|EXCEL.EXE.*cmd|invoice\.vbs|macro_exec|outlook.*attachment
+severity: HIGH
+stage: Initial Access
+technique: 'Phishing: Spearphishing Attachment'

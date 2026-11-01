@@ -1,0 +1,9 @@
+description: Detects active ransomware encryption activity, shadow copy deletion,
+  or backup catalog purging.
+id: R-07
+mitre_id: T1486
+name: Ransomware Encryption & Data Destruction
+pattern: Ransomware|encrypt|vssadmin delete shadows|wbadmin delete catalog|virus=
+severity: CRITICAL
+stage: Impact
+technique: Data Encrypted for Impact

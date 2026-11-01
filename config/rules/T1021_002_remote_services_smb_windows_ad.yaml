@@ -1,0 +1,9 @@
+description: Detects lateral movement across internal subnets utilizing hidden administrative
+  shares.
+id: R-04
+mitre_id: T1021.002
+name: SMB / Windows Admin Share Lateral Pivot
+pattern: smb_lateral|admin\$|c\$|ipc\$|psexec|5140|5145
+severity: HIGH
+stage: Lateral Movement
+technique: 'Remote Services: SMB/Windows Admin Shares'

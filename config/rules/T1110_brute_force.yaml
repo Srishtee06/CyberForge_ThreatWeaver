@@ -1,0 +1,9 @@
+description: Detects high-frequency authentication failures indicative of dictionary
+  attacks or password spraying.
+id: R-02
+mitre_id: T1110
+name: Authentication Burst & Credential Brute Force
+pattern: failed_login|4625|brute|Password.Spray|Bad.Password
+severity: HIGH
+stage: Credential Access
+technique: Brute Force

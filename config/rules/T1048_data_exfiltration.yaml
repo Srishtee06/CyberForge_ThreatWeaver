@@ -1,0 +1,31 @@
+title: "Data Exfiltration and Massive Outbound Transfer"
+id: "rule-t1048-001"
+status: "production"
+description: "Detects large volume outbound byte transfers to external destinations or sensitive external uploads"
+references:
+  - "https://attack.mitre.org/techniques/T1048/"
+author: "CyberForge Detection Engineering"
+date: "2026-10-31"
+
+mitre:
+  technique_id: "T1048"
+  technique_name: "Exfiltration Over Alternative Protocol"
+  tactic: "Exfiltration"
+  kill_chain_stage: "Action on Objectives"
+  severity: "HIGH"
+
+detection:
+  condition: "exfil_volume_or_drop"
+  rules:
+    - name: "massive_egress_traffic"
+      sql: "(dstintf = 'wan1' AND CAST(sentbyte AS BIGINT) > 500000)"
+      aggregation:
+        by: ["srcip", "dstip"]
+        window_seconds: 180
+        threshold: 1
+
+remediation:
+  action: "THROTTLE_AND_KILL_EGRESS"
+  target: "srcip"
+  block_egress_ip: "dstip"
+
